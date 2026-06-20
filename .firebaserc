@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "ywe-ws-dev",
+    "dev": "ywe-ws-dev",
+    "prod": "ywe-ws-prod"
+  }
+}

@@ -1,0 +1,20 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Deals are public listings: anyone can view and post a new deal.
+    // Editing/deleting is left to you via the Firebase console (no admin UI yet).
+    match /deals/{dealId} {
+      allow read, create: if true;
+      allow update, delete: if false;
+    }
+
+    // Offers can be submitted by anyone, but are never readable from the
+    // client - they're private and only delivered via the email Cloud Function.
+    match /offers/{offerId} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+  }
+}
