@@ -51,4 +51,14 @@ describe('DealCard', () => {
     expect(screen.getByText('View Photos')).toBeInTheDocument()
     expect(screen.queryByRole('img')).not.toBeInTheDocument()
   })
+
+  it('prefers the uploaded thumbnail over the photos link', () => {
+    renderCard({ thumbnailUrl: 'https://storage.example.com/thumb.jpg' })
+    expect(screen.getByRole('img')).toHaveAttribute('src', 'https://storage.example.com/thumb.jpg')
+  })
+
+  it('falls back to the photos link when there is no thumbnail', () => {
+    renderCard({ thumbnailUrl: undefined })
+    expect(screen.getByRole('img')).toHaveAttribute('src', deal.photosLink)
+  })
 })

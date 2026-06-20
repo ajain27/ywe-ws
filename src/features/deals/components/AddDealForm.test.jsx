@@ -3,9 +3,14 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import AddDealForm from './AddDealForm'
 import { addDeal } from '../api/deals'
+import { resizeImageToDataUrl } from '../utils/image'
 
 vi.mock('../api/deals', () => ({
   addDeal: vi.fn(),
+}))
+
+vi.mock('../utils/image', () => ({
+  resizeImageToDataUrl: vi.fn(),
 }))
 
 async function fillRequiredFields(user) {
@@ -19,6 +24,7 @@ async function fillRequiredFields(user) {
 describe('AddDealForm', () => {
   beforeEach(() => {
     addDeal.mockReset()
+    resizeImageToDataUrl.mockReset()
   })
 
   it('strips non-digit characters from the zip field and caps it at 5 digits', async () => {
@@ -147,5 +153,90 @@ describe('AddDealForm', () => {
     await user.click(screen.getByRole('button', { name: 'Cancel' }))
 
     expect(onDone).toHaveBeenCalledTimes(1)
+  })
+
+  it('rejects a non-image thumbnail file without attempting to resize it', async () => {
+    const user = userEvent.setup({ applyAccept: false })
+    render(<AddDealForm onDone={() => {}} />)
+
+    const file = new File(['not an image'], 'doc.pdf', { type: 'application/pdf' })
+    await user.upload(screen.getByLabelText(/thumbnail image/i), file)
+
+    expect(screen.getByText('Thumbnail must be an image file.')).toBeInTheDocument()
+    expect(resizeImageToDataUrl).not.toHaveBeenCalled()
+    expect(screen.queryByAltText('Thumbnail preview')).not.toBeInTheDocument()
+  })
+
+  it('shows a preview after a valid image is resized, and clears it on Remove', async () => {
+    resizeImageToDataUrl.mockResolvedValueOnce('data:image/jpeg;base64,abc')
+    const user = userEvent.setup()
+    render(<AddDealForm onDone={() => {}} />)
+
+    const file = new File(['fake-bytes'], 'house.jpg', { type: 'image/jpeg' })
+    await user.upload(screen.getByLabelText(/thumbnail image/i), file)
+
+    const preview = await screen.findByAltText('Thumbnail preview')
+    expect(preview).toHaveAttribute('src', 'data:image/jpeg;base64,abc')
+    expect(screen.queryByLabelText(/thumbnail image/i)).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Remove' }))
+
+    expect(screen.queryByAltText('Thumbnail preview')).not.toBeInTheDocument()
+    expect(screen.getByLabelText(/thumbnail image/i)).toBeInTheDocument()
+  })
+
+  it('shows an error if the resized image is still too large', async () => {
+    resizeImageToDataUrl.mockResolvedValueOnce(`data:image/jpeg;base64,${'a'.repeat(800 * 1024)}`)
+    const user = userEvent.setup()
+    render(<AddDealForm onDone={() => {}} />)
+
+    const file = new File(['fake-bytes'], 'house.jpg', { type: 'image/jpeg' })
+    await user.upload(screen.getByLabelText(/thumbnail image/i), file)
+
+    expect(
+      await screen.findByText('Image is too large even after compression. Try a smaller photo.'),
+    ).toBeInTheDocument()
+    expect(screen.queryByAltText('Thumbnail preview')).not.toBeInTheDocument()
+  })
+
+  it('shows an error if resizing the image fails', async () => {
+    resizeImageToDataUrl.mockRejectedValueOnce(new Error('boom'))
+    const user = userEvent.setup()
+    render(<AddDealForm onDone={() => {}} />)
+
+    const file = new File(['fake-bytes'], 'house.jpg', { type: 'image/jpeg' })
+    await user.upload(screen.getByLabelText(/thumbnail image/i), file)
+
+    expect(
+      await screen.findByText('Could not process that image. Try a different file.'),
+    ).toBeInTheDocument()
+  })
+
+  it('includes the resized thumbnail data URL when submitting', async () => {
+    resizeImageToDataUrl.mockResolvedValueOnce('data:image/jpeg;base64,abc')
+    addDeal.mockResolvedValueOnce({ id: 'new-deal' })
+    const user = userEvent.setup()
+    render(<AddDealForm onDone={() => {}} />)
+
+    const file = new File(['fake-bytes'], 'house.jpg', { type: 'image/jpeg' })
+    await user.upload(screen.getByLabelText(/thumbnail image/i), file)
+    await screen.findByAltText('Thumbnail preview')
+    await fillRequiredFields(user)
+    await user.click(screen.getByRole('button', { name: 'Add Deal' }))
+
+    expect(addDeal).toHaveBeenCalledWith(
+      expect.objectContaining({ thumbnailUrl: 'data:image/jpeg;base64,abc' }),
+    )
+  })
+
+  it('submits with an empty thumbnailUrl when no image was selected', async () => {
+    addDeal.mockResolvedValueOnce({ id: 'new-deal' })
+    const user = userEvent.setup()
+    render(<AddDealForm onDone={() => {}} />)
+
+    await fillRequiredFields(user)
+    await user.click(screen.getByRole('button', { name: 'Add Deal' }))
+
+    expect(addDeal).toHaveBeenCalledWith(expect.objectContaining({ thumbnailUrl: '' }))
   })
 })

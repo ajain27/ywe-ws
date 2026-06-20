@@ -320,6 +320,20 @@ select {
   color: var(--error);
 }
 
+.thumbnail-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.thumbnail-preview img {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
 /* Deals grid */
 .deals-section h2 {
   text-align: left;
@@ -431,6 +445,15 @@ select {
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
+}
+
+.deal-hero {
+  display: block;
+  width: 100%;
+  max-height: 360px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 16px;
 }
 
 .deal-description {

@@ -46,6 +46,14 @@ export default function DealDetailPage() {
         &larr; Back to all deals
       </Link>
 
+      {deal.thumbnailUrl && (
+        <img
+          className="deal-hero"
+          src={deal.thumbnailUrl}
+          alt={`${deal.address}, ${deal.city}, ${deal.state}`}
+        />
+      )}
+
       <h1>{deal.address}</h1>
       <p className="deal-location">
         {deal.city}, {deal.state} {deal.zip}

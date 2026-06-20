@@ -53,6 +53,35 @@ describe('DealDetailPage', () => {
     )
   })
 
+  it('renders the uploaded thumbnail as a hero image when present', async () => {
+    getDeal.mockResolvedValueOnce({
+      id: 'abc',
+      address: '123 Main St',
+      city: 'Dallas',
+      state: 'TX',
+      zip: '75201',
+      thumbnailUrl: 'https://storage.example.com/thumb.jpg',
+    })
+    renderAt('abc')
+
+    expect(await screen.findByText('123 Main St')).toBeInTheDocument()
+    expect(screen.getByRole('img')).toHaveAttribute('src', 'https://storage.example.com/thumb.jpg')
+  })
+
+  it('renders no hero image when there is no thumbnail', async () => {
+    getDeal.mockResolvedValueOnce({
+      id: 'abc',
+      address: '123 Main St',
+      city: 'Dallas',
+      state: 'TX',
+      zip: '75201',
+    })
+    renderAt('abc')
+
+    expect(await screen.findByText('123 Main St')).toBeInTheDocument()
+    expect(screen.queryByRole('img')).not.toBeInTheDocument()
+  })
+
   it('shows a not-found message when the deal does not exist', async () => {
     getDeal.mockResolvedValueOnce(null)
     renderAt('missing')

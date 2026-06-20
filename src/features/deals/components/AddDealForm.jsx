@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { addDeal } from '../api/deals'
 import { US_STATES } from '../constants/states'
 import { normalizeAddress } from '../utils/address'
+import { resizeImageToDataUrl } from '../utils/image'
 
 const emptyForm = {
   address: '',
@@ -10,9 +11,12 @@ const emptyForm = {
   zip: '',
   price: '',
   description: '',
+  thumbnailUrl: '',
   photosLink: '',
   zillowLink: '',
 }
+
+const MAX_THUMBNAIL_DATA_URL_LENGTH = 700 * 1024
 
 function formatPrice(rawValue) {
   const digits = rawValue.replace(/\D/g, '')
@@ -25,9 +29,42 @@ export default function AddDealForm({ onDone, existingAddresses = [] }) {
   const [submitting, setSubmitting] = useState(false)
   const [status, setStatus] = useState(null)
   const [addressError, setAddressError] = useState(null)
+  const [thumbnailError, setThumbnailError] = useState(null)
+  const [processingThumbnail, setProcessingThumbnail] = useState(false)
 
   function update(field) {
     return (e) => setForm((f) => ({ ...f, [field]: e.target.value }))
+  }
+
+  function clearThumbnail() {
+    setForm((f) => ({ ...f, thumbnailUrl: '' }))
+    setThumbnailError(null)
+  }
+
+  async function handleThumbnailChange(e) {
+    const file = e.target.files[0]
+    e.target.value = ''
+    if (!file) return
+
+    if (!file.type.startsWith('image/')) {
+      setThumbnailError('Thumbnail must be an image file.')
+      return
+    }
+
+    setThumbnailError(null)
+    setProcessingThumbnail(true)
+    try {
+      const dataUrl = await resizeImageToDataUrl(file)
+      if (dataUrl.length > MAX_THUMBNAIL_DATA_URL_LENGTH) {
+        setThumbnailError('Image is too large even after compression. Try a smaller photo.')
+        return
+      }
+      setForm((f) => ({ ...f, thumbnailUrl: dataUrl }))
+    } catch {
+      setThumbnailError('Could not process that image. Try a different file.')
+    } finally {
+      setProcessingThumbnail(false)
+    }
   }
 
   function updateZip(e) {
@@ -83,6 +120,28 @@ export default function AddDealForm({ onDone, existingAddresses = [] }) {
             placeholder="123 Main St"
           />
           {addressError && <p className="field-error">{addressError}</p>}
+        </div>
+
+        <div className="field">
+          <label htmlFor="thumbnail">Thumbnail Image</label>
+          {form.thumbnailUrl ? (
+            <div className="thumbnail-preview">
+              <img src={form.thumbnailUrl} alt="Thumbnail preview" />
+              <button type="button" className="cancel-btn" onClick={clearThumbnail}>
+                Remove
+              </button>
+            </div>
+          ) : (
+            <input
+              id="thumbnail"
+              type="file"
+              accept="image/*"
+              disabled={processingThumbnail}
+              onChange={handleThumbnailChange}
+            />
+          )}
+          {processingThumbnail && <p>Processing image…</p>}
+          {thumbnailError && <p className="field-error">{thumbnailError}</p>}
         </div>
 
         <div className="field-row">
@@ -174,7 +233,7 @@ export default function AddDealForm({ onDone, existingAddresses = [] }) {
           <button
             type="submit"
             className="primary-btn"
-            disabled={submitting || Boolean(addressError)}
+            disabled={submitting || processingThumbnail || Boolean(addressError)}
           >
             {submitting ? 'Adding…' : 'Add Deal'}
           </button>

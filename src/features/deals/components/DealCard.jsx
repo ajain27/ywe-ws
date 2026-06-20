@@ -3,15 +3,16 @@ import { Link } from 'react-router-dom'
 
 export default function DealCard({ deal }) {
   const [imageFailed, setImageFailed] = useState(false)
+  const imageSrc = deal.thumbnailUrl || deal.photosLink
 
   return (
     <Link to={`/deals/${deal.id}`} className="deal-card">
       <div className="deal-thumb">
-        {imageFailed ? (
+        {imageFailed || !imageSrc ? (
           <div className="thumb-fallback">View Photos</div>
         ) : (
           <img
-            src={deal.photosLink}
+            src={imageSrc}
             alt={`${deal.address}, ${deal.city}, ${deal.state}`}
             onError={() => setImageFailed(true)}
           />
