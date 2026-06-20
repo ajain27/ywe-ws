@@ -13,7 +13,11 @@
   --success: #1f7a3d;
   --error: #b3261e;
 
-  font: 16px/1.5 system-ui, 'Segoe UI', Roboto, sans-serif;
+  font:
+    16px/1.5 system-ui,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
   color: var(--text);
   background: var(--bg);
 }
@@ -42,10 +46,14 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   margin: 0 0 12px;
   color: var(--heading);
   font-weight: 700;
@@ -227,7 +235,9 @@ label {
   color: var(--text-muted);
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
   font: inherit;
   width: 100%;
   padding: 10px 12px;
@@ -237,7 +247,9 @@ input, textarea, select {
   color: var(--text);
 }
 
-input:focus, textarea:focus, select:focus {
+input:focus,
+textarea:focus,
+select:focus {
   outline: 2px solid var(--gold);
   outline-offset: 1px;
 }
@@ -352,7 +364,9 @@ select {
   overflow: hidden;
   text-decoration: none;
   color: var(--text);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .deal-card:hover {
@@ -405,7 +419,8 @@ select {
 }
 
 /* Deal detail */
-.deal-detail, .offer-page {
+.deal-detail,
+.offer-page {
   text-align: left;
   max-width: 640px;
 }

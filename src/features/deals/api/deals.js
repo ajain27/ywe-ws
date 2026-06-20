@@ -8,11 +8,13 @@ import {
   query,
   serverTimestamp,
 } from 'firebase/firestore'
-import { db } from '../firebase'
+import { db } from '../../../lib/firebase'
 
 function requireDb() {
   if (!db) {
-    throw new Error('Firebase is not configured. Add your project credentials to .env (see README.md).')
+    throw new Error(
+      'Firebase is not configured. Add your project credentials to .env.development (see README.md).',
+    )
   }
   return db
 }

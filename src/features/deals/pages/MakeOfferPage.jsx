@@ -52,7 +52,9 @@ export default function MakeOfferPage() {
 
   return (
     <section className="offer-page">
-      <Link to={`/deals/${dealId}`} className="back-link">&larr; Back to deal</Link>
+      <Link to={`/deals/${dealId}`} className="back-link">
+        &larr; Back to deal
+      </Link>
       <h1>Make an Offer</h1>
       {deal && (
         <p className="deal-location">
@@ -71,22 +73,46 @@ export default function MakeOfferPage() {
 
           <div className="field">
             <label htmlFor="buyerEmail">Email *</label>
-            <input id="buyerEmail" type="email" required value={form.buyerEmail} onChange={update('buyerEmail')} />
+            <input
+              id="buyerEmail"
+              type="email"
+              required
+              value={form.buyerEmail}
+              onChange={update('buyerEmail')}
+            />
           </div>
 
           <div className="field">
             <label htmlFor="buyerPhone">Phone *</label>
-            <input id="buyerPhone" type="tel" required value={form.buyerPhone} onChange={update('buyerPhone')} />
+            <input
+              id="buyerPhone"
+              type="tel"
+              required
+              value={form.buyerPhone}
+              onChange={update('buyerPhone')}
+            />
           </div>
 
           <div className="field">
             <label htmlFor="offerAmount">Offer Amount *</label>
-            <input id="offerAmount" required value={form.offerAmount} onChange={update('offerAmount')} placeholder="$140,000" />
+            <input
+              id="offerAmount"
+              required
+              value={form.offerAmount}
+              onChange={update('offerAmount')}
+              placeholder="$140,000"
+            />
           </div>
 
           <div className="field">
             <label htmlFor="message">Message</label>
-            <textarea id="message" value={form.message} onChange={update('message')} rows={3} placeholder="Proof of funds, timeline, questions..." />
+            <textarea
+              id="message"
+              value={form.message}
+              onChange={update('message')}
+              rows={3}
+              placeholder="Proof of funds, timeline, questions..."
+            />
           </div>
 
           <button type="submit" className="primary-btn" disabled={submitting}>

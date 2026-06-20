@@ -19,7 +19,9 @@ export default function DealCard({ deal }) {
       </div>
       <div className="deal-card-body">
         <p className="deal-address">{deal.address}</p>
-        <p className="deal-location">{deal.city}, {deal.state} {deal.zip}</p>
+        <p className="deal-location">
+          {deal.city}, {deal.state} {deal.zip}
+        </p>
         {deal.price && <p className="deal-price">{deal.price}</p>}
       </div>
     </Link>

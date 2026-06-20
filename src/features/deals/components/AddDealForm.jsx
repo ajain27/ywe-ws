@@ -88,14 +88,24 @@ export default function AddDealForm({ onDone, existingAddresses = [] }) {
         <div className="field-row">
           <div className="field">
             <label htmlFor="city">City *</label>
-            <input id="city" required value={form.city} onChange={update('city')} placeholder="Dallas" />
+            <input
+              id="city"
+              required
+              value={form.city}
+              onChange={update('city')}
+              placeholder="Dallas"
+            />
           </div>
           <div className="field">
             <label htmlFor="state">State *</label>
             <select id="state" required value={form.state} onChange={update('state')}>
-              <option value="" disabled>Select…</option>
+              <option value="" disabled>
+                Select…
+              </option>
               {US_STATES.map((s) => (
-                <option key={s.code} value={s.code}>{s.code} – {s.name}</option>
+                <option key={s.code} value={s.code}>
+                  {s.code} – {s.name}
+                </option>
               ))}
             </select>
           </div>
@@ -116,27 +126,56 @@ export default function AddDealForm({ onDone, existingAddresses = [] }) {
           </div>
           <div className="field">
             <label htmlFor="price">Asking Price</label>
-            <input id="price" inputMode="numeric" value={form.price} onChange={updatePrice} placeholder="$150,000" />
+            <input
+              id="price"
+              inputMode="numeric"
+              value={form.price}
+              onChange={updatePrice}
+              placeholder="$150,000"
+            />
           </div>
         </div>
 
         <div className="field">
           <label htmlFor="description">Description</label>
-          <textarea id="description" value={form.description} onChange={update('description')} placeholder="3 bed / 2 bath, needs cosmetic rehab..." rows={3} />
+          <textarea
+            id="description"
+            value={form.description}
+            onChange={update('description')}
+            placeholder="3 bed / 2 bath, needs cosmetic rehab..."
+            rows={3}
+          />
         </div>
 
         <div className="field">
           <label htmlFor="photosLink">Photos Link *</label>
-          <input id="photosLink" required type="url" value={form.photosLink} onChange={update('photosLink')} placeholder="https://photos.example.com/album" />
+          <input
+            id="photosLink"
+            required
+            type="url"
+            value={form.photosLink}
+            onChange={update('photosLink')}
+            placeholder="https://photos.example.com/album"
+          />
         </div>
 
         <div className="field">
           <label htmlFor="zillowLink">Zillow Link</label>
-          <input id="zillowLink" type="url" value={form.zillowLink} onChange={update('zillowLink')} placeholder="https://www.zillow.com/homedetails/..." />
+          <input
+            id="zillowLink"
+            type="url"
+            value={form.zillowLink}
+            onChange={update('zillowLink')}
+            placeholder="https://www.zillow.com/homedetails/..."
+          />
         </div>
 
         <div className="form-actions">
-          <button type="submit" className="primary-btn" disabled={submitting || Boolean(addressError)}>
+          <button
+            type="submit"
+            className="primary-btn"
+            disabled={submitting || Boolean(addressError)}
+          >
             {submitting ? 'Adding…' : 'Add Deal'}
           </button>
           <button type="button" className="cancel-btn" onClick={onDone}>

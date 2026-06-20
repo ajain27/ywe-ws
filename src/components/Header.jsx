@@ -1,4 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
+import DealsHeaderTabs from '../features/deals/components/DealsHeaderTabs'
+import ThemeToggleButton from '../features/theme/components/ThemeToggleButton'
 
 export default function Header({ activeTab, onChangeTab, theme, onToggleTheme }) {
   const location = useLocation()
@@ -15,33 +17,8 @@ export default function Header({ activeTab, onChangeTab, theme, onToggleTheme })
           <p className="brand-tagline">Off-market wholesale deals, direct from us to you.</p>
         </div>
         <div className="header-actions">
-          {showTabs && (
-            <nav className="header-tabs">
-              <button
-                type="button"
-                className={`header-tab-btn ${activeTab === 'deals' ? 'active' : ''}`}
-                onClick={() => onChangeTab('deals')}
-              >
-                Available Deals
-              </button>
-              <button
-                type="button"
-                className={`header-tab-btn ${activeTab === 'add' ? 'active' : ''}`}
-                onClick={() => onChangeTab('add')}
-              >
-                + Add a Deal
-              </button>
-            </nav>
-          )}
-          <button
-            type="button"
-            className="theme-toggle-btn"
-            onClick={onToggleTheme}
-            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-            title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-          >
-            {theme === 'dark' ? '☀️' : '🌙'}
-          </button>
+          {showTabs && <DealsHeaderTabs activeTab={activeTab} onChangeTab={onChangeTab} />}
+          <ThemeToggleButton theme={theme} onToggle={onToggleTheme} />
         </div>
       </div>
     </header>

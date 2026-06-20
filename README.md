@@ -5,7 +5,8 @@ photos and the Zillow listing, and submit an offer. Offers land in your email
 with the buyer's contact info so you can call them back.
 
 Stack: React (Vite) frontend + Firebase (Firestore for data, Cloud Functions
-+ Nodemailer for offer emails).
+
+- Nodemailer for offer emails).
 
 ## How it works
 
@@ -15,8 +16,8 @@ Stack: React (Vite) frontend + Firebase (Firestore for data, Cloud Functions
 - **Available Deals to Purchase**: a live grid of thumbnails (first image
   from the photos link), pulled from Firestore in real time.
 - **Deal detail page**: click a thumbnail to see the full listing with three
-  buttons — *View on Zillow*, *View Photos* (opens the photos link), and
-  *Make Offer*.
+  buttons — _View on Zillow_, _View Photos_ (opens the photos link), and
+  _Make Offer_.
 - **Make an Offer**: buyer fills in name, email, phone, offer amount, and an
   optional message. Saves to the `offers` collection, which triggers a Cloud
   Function that emails you the offer + buyer contact info via Gmail.
@@ -126,4 +127,5 @@ functions/
   index.js              Cloud Function: emails you on new offer
 firestore.rules         Firestore security rules
 ```
+
 # ywe-ws
