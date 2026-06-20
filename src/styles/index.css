@@ -299,6 +299,41 @@ select {
   background: var(--bg);
 }
 
+.upload-btn {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px dashed var(--border);
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.upload-btn:hover {
+  background: var(--bg);
+  border-color: var(--gold);
+  color: var(--heading);
+}
+
+.upload-btn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
 .form-status {
   margin-top: 12px;
   font-size: 14px;

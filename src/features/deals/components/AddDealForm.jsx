@@ -132,13 +132,17 @@ export default function AddDealForm({ onDone, existingAddresses = [] }) {
               </button>
             </div>
           ) : (
-            <input
-              id="thumbnail"
-              type="file"
-              accept="image/*"
-              disabled={processingThumbnail}
-              onChange={handleThumbnailChange}
-            />
+            <label className={`upload-btn ${processingThumbnail ? 'disabled' : ''}`}>
+              + Choose Image
+              <input
+                id="thumbnail"
+                type="file"
+                accept="image/*"
+                className="visually-hidden"
+                disabled={processingThumbnail}
+                onChange={handleThumbnailChange}
+              />
+            </label>
           )}
           {processingThumbnail && <p>Processing image…</p>}
           {thumbnailError && <p className="field-error">{thumbnailError}</p>}
